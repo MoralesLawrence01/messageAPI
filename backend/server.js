@@ -2,6 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 const session = require("express-session")
 const dotenv = require("dotenv")
+
 dotenv.config()
 
 const sessionSecret = process.env.SESSION_SECRET
@@ -15,6 +16,7 @@ const message = require("./models/messageSchema")
 const chat = require("./models/chatSchema")
 //routes
 const authRoute = require("./routes/auth")
+const chatRoute = require("./routes/chats")
 const authMiddleware = require("./middleware/auth")
 
 const app = express()
@@ -26,6 +28,7 @@ app.use(session({
 }))
 app.use(express.json())
 app.use("/api/auth/", authRoute)
+app.use("/api/chats",authMiddleware.authMiddleware, chatRoute)
 
 app.get("/test", authMiddleware.authMiddleware, (req,res) => {
     res.json({
